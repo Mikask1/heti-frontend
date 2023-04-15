@@ -49,6 +49,12 @@ class MyDocument extends Document {
               });
             `}
           </Script>
+
+          <Script strategy='lazyOnload' id='shared'>
+            {`
+              if (!crossOriginIsolated) SharedArrayBuffer = ArrayBuffer;
+            `}
+          </Script>
         </Head>
         <body>
           <Main />
