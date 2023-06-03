@@ -3,7 +3,7 @@ import { get, RegisterOptions, useFormContext } from 'react-hook-form';
 
 import ErrorMessage from '@/components/form/ErrorMessage';
 import HelperText from '@/components/form/HelperText';
-import Typography from '@/components/typography/Typography';
+import Typography from '@/components/Typography';
 import clsxm from '@/lib/clsxm';
 
 export type SelectInputProps = {
@@ -38,14 +38,19 @@ export default function SelectInput({
   const value = watch(id);
 
   return (
-    <div className='space-y-1.5'>
+    <div className='w-full space-y-1.5 rounded-md'>
       {label && (
         <label htmlFor={id} className='flex space-x-1'>
-          <Typography className='font-semibold text-base-primary'>
+          <Typography
+            font='inter'
+            variant='c1'
+            weight='semibold'
+            className='text-sm text-base-primary'
+          >
             {label}
           </Typography>
           {validation?.required && (
-            <Typography className='text-red'>*</Typography>
+            <Typography className='text-red-500'>*</Typography>
           )}
         </label>
       )}
@@ -57,14 +62,14 @@ export default function SelectInput({
         defaultValue={defaultValue}
         disabled={readOnly}
         className={clsxm(
-          'w-full pl-3 pr-8 py-2.5 truncate',
-          'border-none focus:ring-2 focus:ring-inset',
-          'bg-base-surface font-secondary text-base-primary',
+          'w-full pl-3 pr-8 py-2.5 truncate rounded-md border-none',
+          'focus:ring-2 focus:ring-inset ring-1 ring-inset ring-violet',
+          'bg-typo-white font-primary text-base-primary text-sm',
           readOnly && 'cursor-not-allowed',
           error
-            ? 'focus:ring-red ring-1 ring-inset ring-red'
-            : 'focus:ring-blue',
-          !value && !readOnly && 'text-base-icon',
+            ? 'focus:ring-danger-50 ring-1 ring-inset ring-danger-50'
+            : 'focus:ring-typo-primary',
+          !value && !readOnly && 'text-base-primary',
           className
         )}
         aria-describedby={id}

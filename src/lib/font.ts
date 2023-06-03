@@ -1,13 +1,7 @@
-import { Poppins } from '@next/font/google';
-import localFont from '@next/font/local';
+import { Inter } from '@next/font/google';
 
-export const saoTorpes = localFont({
-  src: '../styles/fonts/SaoTorpes.otf',
-  variable: '--font-saoTorpes',
-});
-
-export const poppins = Poppins({
+export const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-poppins',
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-inter',
+  weight: ['400', '500', '600', '700', '800'],
 });

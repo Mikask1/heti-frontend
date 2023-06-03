@@ -12,10 +12,9 @@ import Router from 'next/router';
 import { DefaultSeo } from 'next-seo';
 import nProgress from 'nprogress';
 
-import Toast from '@/components/Toast';
 import api from '@/lib/api';
 import clsxm from '@/lib/clsxm';
-import { poppins, saoTorpes } from '@/lib/font';
+import { inter } from '@/lib/font';
 import SEO from '@/seo.config';
 
 Router.events.on('routeChangeStart', nProgress.start);
@@ -37,9 +36,8 @@ const queryClient = new QueryClient({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <Toast />
       <DefaultSeo {...SEO} />
-      <div className={clsxm(saoTorpes.variable, poppins.variable)}>
+      <div className={clsxm(inter.variable)}>
         <Component {...pageProps} />
       </div>
     </QueryClientProvider>

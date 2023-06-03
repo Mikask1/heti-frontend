@@ -1,12 +1,12 @@
-import { HiOutlineInformationCircle } from 'react-icons/hi';
-
-import Typography from '@/components/typography/Typography';
+import Typography from '@/components/Typography';
 
 export default function HelperText({ children }: { children: string }) {
   return (
     <div className='flex space-x-1'>
-      <HiOutlineInformationCircle className='shrink-0 text-blue' />
-      <Typography variant='c' className='!leading-tight text-base-secondary'>
+      <Typography
+        variant='c2'
+        className='!leading-tight text-typo-secondary text-xs'
+      >
         {children}
       </Typography>
     </div>

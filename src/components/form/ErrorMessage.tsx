@@ -1,12 +1,9 @@
-import { HiOutlineExclamationCircle } from 'react-icons/hi';
-
-import Typography from '@/components/typography/Typography';
+import Typography from '@/components/Typography';
 
 export default function ErrorMessage({ children }: { children: string }) {
   return (
     <div className='flex space-x-1'>
-      <HiOutlineExclamationCircle className='shrink-0 text-red' />
-      <Typography variant='c' className='!leading-tight text-base-secondary'>
+      <Typography variant='c1' className='!leading-tight text-danger-50'>
         {children}
       </Typography>
     </div>
