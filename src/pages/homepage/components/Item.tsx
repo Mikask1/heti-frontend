@@ -17,7 +17,7 @@ type ItemProps = {
 };
 const Item = ({ src, name, location, price, rating, href }: ItemProps) => {
   return (
-    <Link href={href} target='_blank'>
+    <Link href={href} target='_blank' key={href}>
       <div className='min-h-[350px] h-fit pb-2 w-full shadow-md relative rounded-lg'>
         <div className='w-full h-[230px] bg-base-surface'>
           <Image
