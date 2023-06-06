@@ -2,6 +2,7 @@
 import React, { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 
+import SEO from '@/components/SEO';
 import Typography from '@/components/Typography';
 import { FilterFormData, priceMap, ratingMap } from '@/contents/filter';
 import { Product } from '@/contents/product';
@@ -132,12 +133,14 @@ const Homepage = () => {
 
   return (
     <Layout>
+      <SEO title='Search' description='Heti' />
       <SearchBar
         isRecording={isRecording}
         record={record}
         searchMethods={searchMethods}
         sendText={sendText}
         isLoading={searchLoading}
+        className='max-w-[80%] mx-auto lg:max-w-full'
       />
       {!searched && !searchLoading && (
         <Typography
@@ -147,15 +150,18 @@ const Homepage = () => {
           Silahkan mencari lewat search bar atau lewat microphone..
         </Typography>
       )}
-      <section className='grid grid-cols-[80%_20%] max-w-[80%] mx-auto gap-12'>
+      <section className='grid sm:grid-cols-2 md:grid-cols-[70%_30%] lg:grid-cols-[80%_20%] max-w-[80%] mx-auto gap-12'>
         {searchLoading ? (
-          <SearchResult data={[]} />
+          <SearchResult data={[]} className='order-2 sm:order-1' />
         ) : isError ? (
-          <Typography variant='p' className='text-base-secondary'>
+          <Typography
+            variant='p'
+            className='text-base-secondary order-2 sm:order-1'
+          >
             Terjadi suatu kesalahan, mohon mencoba lagi..
           </Typography>
         ) : (
-          <SearchResult data={shownData} />
+          <SearchResult data={shownData} className='order-2 sm:order-1' />
         )}
         <Filter
           ratingFilter={ratingFilter}
@@ -164,6 +170,7 @@ const Homepage = () => {
           setPriceFilter={setPriceFilter}
           methods={methods}
           applyFilter={applyFilter}
+          className='order-1'
         />
       </section>
     </Layout>

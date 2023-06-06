@@ -17,6 +17,7 @@ type FilterContainerProps = {
   setPriceFilter: React.Dispatch<React.SetStateAction<0 | 2 | 1 | 3 | 4 | 5>>;
   methods: UseFormReturn<FilterFormData, any>;
   applyFilter: (data: FilterFormData) => void;
+  className?: string;
 };
 
 const Filter = ({
@@ -26,9 +27,10 @@ const Filter = ({
   setRatingFilter,
   methods,
   applyFilter,
+  className,
 }: FilterContainerProps) => {
   return (
-    <section>
+    <section className={className}>
       <div className='w-full shadow-md rounded-lg'>
         <div className='flex flex-col gap-6 p-6'>
           <Typography variant='h6' weight='semibold'>

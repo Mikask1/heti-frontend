@@ -16,6 +16,7 @@ type SearchBarProperties = {
   searchMethods: UseFormReturn<SearchFormData, any>;
   sendText: (e: FormEvent<HTMLFormElement>) => void;
   isLoading: boolean;
+  className?: string;
 };
 
 const SearchBar = ({
@@ -24,9 +25,10 @@ const SearchBar = ({
   searchMethods,
   sendText,
   isLoading,
+  className,
 }: SearchBarProperties) => {
   return (
-    <section className='flex justify-center mt-20 mb-14'>
+    <section className={clsxm('flex justify-center mt-20 mb-14', className)}>
       <div
         className={clsxm(
           'w-[950px] h-12 border border-black rounded-[50px] flex justify-between items-center pl-4 pr-2 transition-all duration-300 ease-in-out',
