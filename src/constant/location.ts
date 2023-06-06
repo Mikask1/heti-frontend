@@ -1,11 +1,11 @@
 export const LOCATION = [
+  'None',
   'Kab. Tangerang',
   'Jakarta Pusat',
   'Malang',
   'Yogyakarta',
   'Kab. Sidoarjo',
   'Makassar',
-  'Dilayani Tokopedia',
   'Jakarta Utara',
   'Jakarta Timur',
   'Kab. Bekasi',

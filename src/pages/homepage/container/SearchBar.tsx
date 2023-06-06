@@ -1,23 +1,37 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Image from 'next/image';
-import React from 'react';
+import React, { FormEvent } from 'react';
+import { FormProvider, UseFormReturn } from 'react-hook-form';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { BiStop } from 'react-icons/bi';
 import { BsFillMicFill } from 'react-icons/bs';
+import { ImSpinner2 } from 'react-icons/im';
 
+import { SearchFormData } from '@/contents/search';
 import clsxm from '@/lib/clsxm';
 
 type SearchBarProperties = {
   isRecording: boolean;
   record: () => void;
+  searchMethods: UseFormReturn<SearchFormData, any>;
+  sendText: (e: FormEvent<HTMLFormElement>) => void;
+  isLoading: boolean;
 };
 
-const SearchBar = ({ isRecording, record }: SearchBarProperties) => {
+const SearchBar = ({
+  isRecording,
+  record,
+  searchMethods,
+  sendText,
+  isLoading,
+}: SearchBarProperties) => {
   return (
-    <section className='flex justify-center mt-20'>
+    <section className='flex justify-center mt-20 mb-14'>
       <div
         className={clsxm(
           'w-[950px] h-12 border border-black rounded-[50px] flex justify-between items-center pl-4 pr-2 transition-all duration-300 ease-in-out',
-          isRecording && 'bg-violet border-violet'
+          isRecording && 'bg-violet border-violet',
+          isLoading && 'bg-gray-300'
         )}
       >
         <AiOutlineSearch
@@ -36,21 +50,40 @@ const SearchBar = ({ isRecording, record }: SearchBarProperties) => {
             isRecording && 'opacity-100 delay-300'
           )}
         />
-        <input
-          className={clsxm(
-            'w-full mx-2 appearance-none focus:outline-none bg-transparent',
-            isRecording && 'invisible'
-          )}
-          placeholder='Search...'
-        ></input>
+        <div className='w-full'>
+          <FormProvider {...searchMethods}>
+            <form onSubmit={(e) => sendText(e)}>
+              <input
+                className={clsxm(
+                  'w-full mx-2 appearance-none focus:outline-none bg-transparent focus:bg-transparent active:bg-transparent',
+                  'disabled:cursor-wait',
+                  isRecording && 'invisible',
+                  isLoading && 'brightness-75'
+                )}
+                placeholder='Search...'
+                id='query'
+                name='query'
+                aria-describedby='query'
+                disabled={isLoading}
+              ></input>
+            </form>
+          </FormProvider>
+        </div>
         <div
           className={clsxm(
             'w-10 h-9 rounded-[50%] flex flex-col justify-center items-center cursor-pointer hover:brightness-90 transition-all duration-300 ease-in-out',
-            !isRecording ? 'bg-violet' : 'bg-white'
+            !isRecording ? 'bg-violet' : 'bg-white',
+            isLoading && 'brightness-75'
           )}
-          onClick={() => record()}
+          onClick={() => {
+            if (!isLoading) {
+              record();
+            }
+          }}
         >
-          {!isRecording ? (
+          {isLoading ? (
+            <ImSpinner2 className='animate-spin text-white' />
+          ) : !isRecording ? (
             <BsFillMicFill className='text-white' />
           ) : (
             <BiStop className='text-violet text-3xl' />

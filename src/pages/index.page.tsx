@@ -1,145 +1,170 @@
-import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { AiFillStar } from 'react-icons/ai';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { FormEvent } from 'react';
+import { useForm } from 'react-hook-form';
 
-import Button from '@/components/Button';
-import SelectInput from '@/components/form/SelectInput';
 import Typography from '@/components/Typography';
-import { LOCATION } from '@/constant/location';
+import { FilterFormData, priceMap, ratingMap } from '@/contents/filter';
+import { Product } from '@/contents/product';
+import { SearchFormData } from '@/contents/search';
+import useMediaRecorder from '@/hooks/useMediaRecorder';
 import Layout from '@/layouts/Layout';
-import clsxm from '@/lib/clsxm';
+import api from '@/lib/api';
+import { getTop } from '@/lib/helper';
+import Filter from '@/pages/homepage/container/Filter';
 import SearchBar from '@/pages/homepage/container/SearchBar';
 import SearchResult from '@/pages/homepage/container/SearchResult';
 
 const Homepage = () => {
-  const [isRecording, setIsRecording] = React.useState(false);
+  const [searchLoading, setSearchLoading] = React.useState(false);
+  const [searched, setSearched] = React.useState(false);
 
-  function record() {
-    setIsRecording(!isRecording);
+  const [priceFilter, setPriceFilter] = React.useState<0 | 1 | 2 | 3 | 4 | 5>(
+    0
+  );
+  const [ratingFilter, setRatingFilter] = React.useState<0 | 1 | 2 | 3>(0);
+
+  const [queryData, setQueryData] = React.useState<Product[][]>([]);
+  const [shownData, setShownData] = React.useState<Product[]>([]);
+  const [isError, setIsError] = React.useState(false);
+
+  const {
+    startRecording,
+    stopRecording,
+    isRecording,
+    audioChunks,
+    audioReady,
+  } = useMediaRecorder();
+  async function record() {
+    if (!isRecording) {
+      // Start Recording
+      startRecording();
+    } else {
+      // Stop Recording
+      stopRecording();
+      setSearchLoading(true);
+    }
   }
 
-  const [priceFilter, setPriceFilter] = React.useState(0);
-  const [ratingFilter, setRatingFilter] = React.useState(0);
+  const methods = useForm<FilterFormData>();
+  const searchMethods = useForm<SearchFormData>();
 
-  const methods = useForm();
+  React.useEffect(() => {
+    if (audioChunks.length > 0 && audioReady && searchLoading) {
+      const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+
+      const audioFile = new File([audioBlob], 'recording.webm', {
+        type: 'audio/webm',
+      });
+      const formData = new FormData();
+
+      formData.append('file', audioFile, 'recording.webm');
+
+      api
+        .post('/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then((result) => {
+          setIsError(false);
+          setQueryData(result.data.data);
+
+          const realData = getTop(result.data.data);
+
+          setSearched(true);
+          setShownData(realData);
+          setSearchLoading(false);
+        })
+        .catch(() => setIsError(true));
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [audioReady]);
+
+  async function sendText(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSearchLoading(true);
+    const el = e.target as any;
+
+    const query: string = el.query.value;
+
+    const queryUrlSafe = encodeURIComponent(query);
+
+    try {
+      const result = await api.get(`/recommendation?query=${queryUrlSafe}`);
+      setQueryData(result.data.data);
+
+      const realData = getTop(result.data.data);
+
+      setIsError(false);
+      setShownData(realData);
+    } catch (err) {
+      setIsError(true);
+    }
+
+    setSearchLoading(false);
+    setSearched(true);
+  }
+
+  function applyFilter(data: FilterFormData) {
+    const filter = {
+      location: data.location,
+      price: priceMap[priceFilter],
+      rating: ratingMap[ratingFilter],
+    };
+
+    const filteredData = [];
+
+    for (const items of queryData) {
+      const filtered = items.filter(
+        (item) =>
+          (filter.location == item.location || filter.location == 'None') &&
+          filter.price.lower < item.price &&
+          item.price < filter.price.upper &&
+          item.rating > filter.rating
+      );
+      filteredData.push(filtered);
+    }
+
+    const realData = getTop(filteredData);
+
+    setShownData(realData);
+  }
 
   return (
     <Layout>
-      <SearchBar isRecording={isRecording} record={record} />
-      <section className='grid grid-cols-[80%_20%] max-w-[80%] mx-auto gap-12 mt-16'>
-        <SearchResult />
-        <section>
-          <div className='w-full shadow-md rounded-lg'>
-            <div className='flex flex-col gap-6 p-6'>
-              <Typography variant='h6' weight='semibold'>
-                Filter
-              </Typography>
-              <div className='flex flex-col gap-2'>
-                <Typography variant='c1' className='font-medium'>
-                  Harga
-                </Typography>
-                <Button
-                  variant='primary'
-                  className={clsxm('w-full', priceFilter !== 1 && 'bg-white')}
-                  textClassName={clsxm(priceFilter !== 1 && 'text-black')}
-                  onClick={() => setPriceFilter(priceFilter !== 1 ? 1 : 0)}
-                >
-                  {'Rp 0rb - Rp 50rb'}
-                </Button>
-                <Button
-                  variant='primary'
-                  className={clsxm('w-full', priceFilter !== 2 && 'bg-white')}
-                  textClassName={clsxm(priceFilter !== 2 && 'text-black')}
-                  onClick={() => setPriceFilter(priceFilter !== 2 ? 2 : 0)}
-                >
-                  {'Rp 50rb - Rp 100rb'}
-                </Button>
-                <Button
-                  variant='primary'
-                  className={clsxm('w-full', priceFilter !== 3 && 'bg-white')}
-                  textClassName={clsxm(priceFilter !== 3 && 'text-black')}
-                  onClick={() => setPriceFilter(priceFilter !== 3 ? 3 : 0)}
-                >
-                  {'Rp 100rb - Rp 300rb'}
-                </Button>
-                <Button
-                  variant='primary'
-                  className={clsxm('w-full', priceFilter !== 4 && 'bg-white')}
-                  textClassName={clsxm(priceFilter !== 4 && 'text-black')}
-                  onClick={() => setPriceFilter(priceFilter !== 4 ? 4 : 0)}
-                >
-                  {'Rp 300rb - Rp 1jt'}
-                </Button>
-                <Button
-                  variant='primary'
-                  className={clsxm('w-full', priceFilter !== 5 && 'bg-white')}
-                  textClassName={clsxm(priceFilter !== 5 && 'text-black')}
-                  onClick={() => setPriceFilter(priceFilter !== 5 ? 5 : 0)}
-                >
-                  {'> Rp 1jt '}
-                </Button>
-              </div>
-              <div className='flex flex-col gap-2'>
-                <Typography variant='c1' weight='medium'>
-                  Rating
-                </Typography>
-                <Button
-                  variant='primary'
-                  className={clsxm('w-full', ratingFilter !== 1 && 'bg-white')}
-                  textClassName={clsxm(ratingFilter !== 1 && 'text-black')}
-                  onClick={() => setRatingFilter(ratingFilter !== 1 ? 1 : 0)}
-                  leftIcon={AiFillStar}
-                  leftIconClassName='text-yellow md:text-[16px]'
-                >
-                  4.5+
-                </Button>
-                <Button
-                  variant='primary'
-                  className={clsxm('w-full', ratingFilter !== 1 && 'bg-white')}
-                  textClassName={clsxm(ratingFilter !== 1 && 'text-black')}
-                  onClick={() => setRatingFilter(ratingFilter !== 1 ? 1 : 0)}
-                  leftIcon={AiFillStar}
-                  leftIconClassName='text-yellow md:text-[16px]'
-                >
-                  4+
-                </Button>
-                <Button
-                  variant='primary'
-                  className={clsxm('w-full', ratingFilter !== 1 && 'bg-white')}
-                  textClassName={clsxm(ratingFilter !== 1 && 'text-black')}
-                  onClick={() => setRatingFilter(ratingFilter !== 1 ? 1 : 0)}
-                  leftIcon={AiFillStar}
-                  leftIconClassName='text-yellow md:text-[16px]'
-                >
-                  3+
-                </Button>
-              </div>
-              <div className='flex flex-col gap-2'>
-                <Typography variant='c1' className='font-medium'>
-                  Lokasi
-                </Typography>
-                <FormProvider {...methods}>
-                  <form>
-                    <SelectInput id='location' value={'Surabaya'}>
-                      {LOCATION.map((loc, index) => (
-                        <option key={index} value={loc}>
-                          {loc}
-                        </option>
-                      ))}
-                    </SelectInput>
-                    <Button
-                      variant='primary'
-                      type='submit'
-                      className='w-full mt-6'
-                    >
-                      Apply
-                    </Button>
-                  </form>
-                </FormProvider>
-              </div>
-            </div>
-          </div>
-        </section>
+      <SearchBar
+        isRecording={isRecording}
+        record={record}
+        searchMethods={searchMethods}
+        sendText={sendText}
+        isLoading={searchLoading}
+      />
+      {!searched && !searchLoading && (
+        <Typography
+          variant='bt'
+          className='text-base-secondary max-w-[80%] mx-auto mb-5'
+        >
+          Silahkan mencari lewat search bar atau lewat microphone..
+        </Typography>
+      )}
+      <section className='grid grid-cols-[80%_20%] max-w-[80%] mx-auto gap-12'>
+        {searchLoading ? (
+          <SearchResult data={[]} />
+        ) : isError ? (
+          <Typography variant='p' className='text-base-secondary'>
+            Terjadi suatu kesalahan, mohon mencoba lagi..
+          </Typography>
+        ) : (
+          <SearchResult data={shownData} />
+        )}
+        <Filter
+          ratingFilter={ratingFilter}
+          priceFilter={priceFilter}
+          setRatingFilter={setRatingFilter}
+          setPriceFilter={setPriceFilter}
+          methods={methods}
+          applyFilter={applyFilter}
+        />
       </section>
     </Layout>
   );
