@@ -21,10 +21,10 @@ const SearchResult = ({
         className
       )}
     >
-      {data.length > 0
-        ? data?.map((item) => (
+      {data.length
+        ? data?.map((item, index) => (
             <Item
-              key={item.url}
+              key={index}
               src={item.image_url}
               name={item.name}
               location={item.location}
@@ -33,9 +33,9 @@ const SearchResult = ({
               href={item.url}
             />
           ))
-        : random.map((value) => (
+        : random.map((value, index) => (
             <>
-              <ItemSkeleton key={value} />
+              <ItemSkeleton value={index} key={index} />
             </>
           ))}
     </section>

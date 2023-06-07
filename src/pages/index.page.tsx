@@ -43,6 +43,8 @@ const Homepage = () => {
       // Stop Recording
       stopRecording();
       setSearchLoading(true);
+      setShownData([]);
+      setQueryData([]);
     }
   }
 
@@ -68,12 +70,16 @@ const Homepage = () => {
         })
         .then((result) => {
           setIsError(false);
-          setQueryData(result.data.data);
 
-          const realData = getTop(result.data.data);
+          if (result.data.data) {
+            setQueryData(result.data.data);
+            const realData = getTop(result.data.data);
+            setShownData(realData);
+          } else {
+            setIsError(true);
+          }
 
           setSearched(true);
-          setShownData(realData);
           setSearchLoading(false);
         })
         .catch(() => setIsError(true));
@@ -84,6 +90,9 @@ const Homepage = () => {
   async function sendText(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSearchLoading(true);
+    setIsError(false);
+    setShownData([]);
+    setQueryData([]);
     const el = e.target as any;
 
     const query: string = el.query.value;
@@ -92,12 +101,13 @@ const Homepage = () => {
 
     try {
       const result = await api.get(`/recommendation?query=${queryUrlSafe}`);
-      setQueryData(result.data.data);
-
-      const realData = getTop(result.data.data);
-
-      setIsError(false);
-      setShownData(realData);
+      if (result.data.data) {
+        setQueryData(result.data.data);
+        const realData = getTop(result.data.data);
+        setShownData(realData);
+      } else {
+        setIsError(true);
+      }
     } catch (err) {
       setIsError(true);
     }

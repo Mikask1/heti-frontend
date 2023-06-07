@@ -1,8 +1,11 @@
 import React from 'react';
 
-const ItemSkeleton = () => {
+const ItemSkeleton = ({ value }: { value: number }) => {
   return (
-    <div className='min-h-[350px] h-fit pb-2 w-full shadow-md relative rounded-lg'>
+    <div
+      className='min-h-[350px] h-fit pb-2 w-full shadow-md relative rounded-lg'
+      key={value}
+    >
       <div className='w-full h-[230px] bg-gray-200 animate-pulse'></div>
       <div className='min-h-[120px] h-fit px-4 flex flex-col justify-center'>
         <div className='flex flex-col gap-1.5'>
