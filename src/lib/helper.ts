@@ -1,7 +1,12 @@
 import { Product } from '@/contents/product';
 
 export function rupiah(number: number) {
-  return number.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
+  return number.toLocaleString('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
 }
 
 export function getTop(data: Product[][]) {

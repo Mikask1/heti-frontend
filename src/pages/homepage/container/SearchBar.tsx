@@ -17,6 +17,7 @@ type SearchBarProperties = {
   sendText: (e: FormEvent<HTMLFormElement>) => void;
   isLoading: boolean;
   className?: string;
+  value?: string;
 };
 
 const SearchBar = ({
@@ -26,9 +27,10 @@ const SearchBar = ({
   sendText,
   isLoading,
   className,
+  value,
 }: SearchBarProperties) => {
   return (
-    <section className={clsxm('flex justify-center mt-20 mb-14', className)}>
+    <section className={clsxm('flex justify-center mt-20', className)}>
       <div
         className={clsxm(
           'w-[950px] h-12 border border-black rounded-[50px] flex justify-between items-center pl-4 pr-2 transition-all duration-300 ease-in-out',
@@ -62,7 +64,7 @@ const SearchBar = ({
                   isRecording && 'invisible',
                   isLoading && 'brightness-75'
                 )}
-                placeholder='Search...'
+                placeholder={value ?? 'Search...'}
                 id='query'
                 name='query'
                 aria-describedby='query'

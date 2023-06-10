@@ -119,6 +119,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <span
           className={clsxm(
             'text-white font-normal text-[14px] group-hover:text-white',
+            isLoading && 'text-transparent',
             textClassName
           )}
         >
