@@ -11,21 +11,6 @@ const useMediaRecorder = () => {
   const [audioReady, setAudioReady] = useState(false);
 
   useEffect(() => {
-    if (window != undefined) {
-      window.navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then((stream) => setMediaStream(stream));
-    }
-
-    return () => {
-      if (mediaStream) {
-        mediaStream.getTracks().forEach((track: any) => track.stop());
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     if (audioChunks.length > 0) {
       setAudioReady(true);
     } else {
@@ -63,6 +48,8 @@ const useMediaRecorder = () => {
     isRecording: recording,
     audioChunks,
     audioReady,
+    setMediaStream,
+    isMediaStreamAvailable: mediaStream ? true : false,
   };
 };
 

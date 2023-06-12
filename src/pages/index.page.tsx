@@ -43,17 +43,30 @@ const Homepage = () => {
     isRecording,
     audioChunks,
     audioReady,
+    setMediaStream,
+    isMediaStreamAvailable,
   } = useMediaRecorder();
+
   async function record() {
-    if (!isRecording) {
-      // Start Recording
-      startRecording();
-    } else {
-      // Stop Recording
-      stopRecording();
-      setSearchLoading(true);
-      setShownData([]);
-      setQueryData([]);
+    if (window != undefined) {
+      window.navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((stream) => {
+          setMediaStream(stream);
+        });
+    }
+
+    if (isMediaStreamAvailable) {
+      if (!isRecording) {
+        // Start Recording
+        startRecording();
+      } else {
+        // Stop Recording
+        stopRecording();
+        setSearchLoading(true);
+        setShownData([]);
+        setQueryData([]);
+      }
     }
   }
 

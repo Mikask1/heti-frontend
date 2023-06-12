@@ -20,6 +20,7 @@ const SearchResult = ({
         'grid md:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-4',
         className
       )}
+      key={data.length}
     >
       {data.length
         ? data?.map((item, index) => (
