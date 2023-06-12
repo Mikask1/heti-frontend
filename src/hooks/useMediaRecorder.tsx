@@ -12,7 +12,7 @@ const useMediaRecorder = () => {
 
   useEffect(() => {
     if (window != undefined) {
-      navigator.mediaDevices
+      window.navigator.mediaDevices
         .getUserMedia({ audio: true })
         .then((stream) => setMediaStream(stream));
     }
