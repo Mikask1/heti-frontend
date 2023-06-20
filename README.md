@@ -1,1 +1,1 @@
-# heti-frontend
+# kango-frontend

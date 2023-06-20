@@ -43,30 +43,18 @@ const Homepage = () => {
     isRecording,
     audioChunks,
     audioReady,
-    setMediaStream,
-    isMediaStreamAvailable,
   } = useMediaRecorder();
 
   async function record() {
-    if (window != undefined) {
-      window.navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then((stream) => {
-          setMediaStream(stream);
-        });
-    }
-
-    if (isMediaStreamAvailable) {
-      if (!isRecording) {
-        // Start Recording
-        startRecording();
-      } else {
-        // Stop Recording
-        stopRecording();
-        setSearchLoading(true);
-        setShownData([]);
-        setQueryData([]);
-      }
+    if (!isRecording) {
+      // Start Recording
+      startRecording();
+    } else {
+      // Stop Recording
+      stopRecording();
+      setSearchLoading(true);
+      setShownData([]);
+      setQueryData([]);
     }
   }
 
@@ -173,16 +161,21 @@ const Homepage = () => {
   const [ongkirLoading, setOngkirLoading] = React.useState(false);
   async function fetchOngkir(data: LocationFormData) {
     setOngkirLoading(true);
-    const response = await api.get(
-      `/cekongkir?src=${data.src}&dest=${data.dest}`
-    );
+    try {
+      const response = await api.get(
+        `/cekongkir?src=${data.src}&dest=${data.dest}`
+      );
+
+      setOngkir(response.data.data);
+    } catch (error) {
+      setOngkirLoading(false);
+    }
 
     setOngkirLoading(false);
-    setOngkir(response.data.data);
   }
   return (
     <Layout>
-      <SEO title='Search' description='Heti' />
+      <SEO title='Search' description='Homepage Kango.id' />
       <SearchBar
         isRecording={isRecording}
         record={record}
@@ -195,7 +188,10 @@ const Homepage = () => {
 
       <div className='max-w-[80%] mx-auto gap-4 my-7'>
         <FormProvider {...ongkirMethods}>
-          <Typography variant='bt'>Cari Ongkir</Typography>
+          <Typography variant='bt'>
+            Cari Ongkir{' '}
+            <span className='text-sm text-gray-500'>(per 1 kg)</span>
+          </Typography>
           <form
             onSubmit={ongkirMethods.handleSubmit((data) => fetchOngkir(data))}
             className='flex items-center md:w-[60%] lg:w-[70%] xl:w-[35%] gap-2'

@@ -7,16 +7,16 @@ const config: DefaultSeoProps = {
     type: 'website',
     locale: 'in_ID',
     url: 'https://www.itsukmexpo.com',
-    siteName: 'Heti',
+    siteName: 'Kango.id',
   },
   twitter: {
     handle: '@handle',
     site: '@site',
     cardType: 'summary_large_image',
   },
-  titleTemplate: '%s | Heti',
-  description: 'Heti',
-  defaultTitle: 'Heti',
+  titleTemplate: '%s | Kango.id',
+  description: 'Kango.id',
+  defaultTitle: 'Kango.id',
   additionalLinkTags: [
     {
       rel: 'icon',

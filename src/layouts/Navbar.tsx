@@ -10,7 +10,7 @@ const Navbar = () => {
         <div className='flex items-center gap-2'>
           <Image
             src='/logo_white.svg'
-            alt='Logo Heti'
+            alt='Logo Kango.id'
             width={25}
             height={24}
           ></Image>
@@ -19,7 +19,7 @@ const Navbar = () => {
             weight='bold'
             className='leading-none mt-0.5 text-white'
           >
-            Heti
+            Kango.id
           </Typography>
         </div>
       </div>

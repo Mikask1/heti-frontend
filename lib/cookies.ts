@@ -5,11 +5,11 @@ const cookies = new Cookies({
 });
 
 export const getToken = (): string => {
-  return cookies.get('@heti/token');
+  return cookies.get('@kango/token');
 };
 
 export const setToken = (token: string) => {
-  cookies.set('@heti/token', token, {
+  cookies.set('@kango/token', token, {
     path: '/',
     secure: true,
     httpOnly: true,
@@ -17,7 +17,7 @@ export const setToken = (token: string) => {
 };
 
 export const removeToken = () => {
-  cookies.remove('@heti/token', {
+  cookies.remove('@kango/token', {
     path: '/',
     secure: true,
     httpOnly: true,
