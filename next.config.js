@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: '/smart/kango',
+  assetPrefix: '/smart/kango',
   eslint: {
     dirs: ['src'],
   },
