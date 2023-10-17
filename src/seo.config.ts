@@ -6,7 +6,7 @@ const config: DefaultSeoProps = {
   openGraph: {
     type: 'website',
     locale: 'in_ID',
-    url: 'https://www.itsukmexpo.com',
+    url: 'https://www.kango.my.id',
     siteName: 'Kango.id',
   },
   twitter: {

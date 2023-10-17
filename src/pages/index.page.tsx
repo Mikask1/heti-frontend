@@ -175,7 +175,7 @@ const Homepage = () => {
   }
   return (
     <Layout>
-      <SEO title='Search' description='Homepage Kango.id' />
+      <SEO title='Search' description='Search your medical solutions now!' />
       <SearchBar
         isRecording={isRecording}
         record={record}
